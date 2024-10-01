@@ -1,7 +1,6 @@
 'use client'
 
 import React, { useState, useRef, useEffect } from 'react'
-import Image from 'next/image'
 import { Slider } from "@/components/ui/slider"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
@@ -355,9 +354,9 @@ export default function Home() {
               onClick={handleColumnClick}
             >
               {processedImage ? (
-                <Image src={processedImage} alt="Processed" width={800} height={600} className="max-w-full max-h-full object-contain" />
+                <img src={processedImage} alt="Processed" className="max-w-full max-h-full object-contain" />
               ) : (
-                <Image src={selectedImage} alt="Default or Selected" width={800} height={600} className="max-w-full max-h-full object-contain" />
+                <img src={selectedImage} alt="Default or Selected" className="max-w-full max-h-full object-contain" />
               )}
               <input
                 type="file"
