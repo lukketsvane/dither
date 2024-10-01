@@ -23,7 +23,7 @@ const CustomSlider: React.FC<CustomSliderProps> = ({ value, onChange, min, max, 
   return (
     <div className="relative w-full h-1 bg-gray-200 rounded-full">
       <div
-        className="absolute top-0 left-0 h-full bg-blue-500 rounded-l-full"
+        className="absolute top-0 left-0 h-full bg-primary rounded-l-full"
         style={{ width: `${percentage}%` }}
       ></div>
       <Slider
@@ -46,7 +46,7 @@ const ditherAlgorithms = [
   "Noise"
 ]
 
-export default function Home() {
+export default function DisplacePlugin() {
   const [selectedAlgorithm, setSelectedAlgorithm] = useState(0)
   const [pixelationScale, setPixelationScale] = useState(1)
   const [detailEnhancement, setDetailEnhancement] = useState(50)
@@ -86,7 +86,7 @@ export default function Home() {
     const ctx = canvas.getContext('2d')
     if (!ctx) return
 
-    const img = new Image()
+    const img = new window.Image()
     img.crossOrigin = "anonymous"
     img.onload = () => {
       canvas.width = img.width
@@ -336,155 +336,151 @@ export default function Home() {
   }
 
   return (
-    <main className="flex min-h-screen items-center justify-center bg-gray-100">
-      <div className="w-full max-w-7xl h-[calc(100vh-2rem)] m-4 bg-white rounded-lg overflow-hidden">
-        <div className="flex flex-col h-full bg-white overflow-hidden">
-          <div className="flex items-center justify-between p-4 border-b border-gray-200">
-            <h1 className="text-xl">
-              <span className="font-bold">Dither</span>
-              <span className="font-normal text-gray-500"> – Apply amazing dithering effects</span>
-            </h1>
-            <button className="text-gray-500 hover:text-gray-700" onClick={removeImage}>
-              <X className="h-6 w-6" />
-            </button>
+    <div className="flex flex-col h-full bg-white overflow-hidden">
+      <div className="flex items-center justify-between p-4 border-b border-gray-200">
+        <h1 className="text-xl">
+          <span className="font-bold">Dither</span>
+          <span className="font-normal text-gray-500"> – Apply amazing dithering effects</span>
+        </h1>
+        <button className="text-gray-500 hover:text-gray-700" onClick={removeImage}>
+          <X className="h-6 w-6" />
+        </button>
+      </div>
+      <div className="flex flex-1 overflow-hidden">
+        <div 
+          className="flex-1 flex items-center justify-center border-r border-gray-200 cursor-pointer overflow-auto bg-white"
+          onClick={handleColumnClick}
+        >
+          {processedImage ? (
+            <img src={processedImage} alt="Processed" className="max-w-full max-h-full object-contain" />
+          ) : (
+            <img src={selectedImage} alt="Default or Selected" className="max-w-full max-h-full object-contain" />
+          )}
+          <input
+            type="file"
+            ref={fileInputRef}
+            onChange={handleImageUpload}
+            accept="image/*"
+            className="hidden"
+            aria-label="Upload image"
+          />
+          <canvas ref={canvasRef} className="hidden" />
+        </div>
+        <div className="w-80 flex flex-col p-4 overflow-y-auto">
+          <Select
+            options={ditherAlgorithms}
+            value={selectedAlgorithm}
+            onChange={(value) => setSelectedAlgorithm(Number(value))}
+            className="mb-4"
+          />
+          <div className="space-y-4 mb-4">
+            <div className="flex items-center">
+              <span className="text-sm font-medium w-32">Pixelation Scale</span>
+              <Input
+                type="number"
+                value={pixelationScale}
+                onChange={(e) => setPixelationScale(Number(e.target.value))}
+                className="w-20 mr-4 text-sm border-0 bg-white"
+              />
+              <CustomSlider
+                value={pixelationScale}
+                onChange={setPixelationScale}
+                min={1}
+                max={10}
+                step={1}
+              />
+            </div>
+            <div className="flex items-center">
+              <span className="text-sm font-medium w-32">Detail Enhancement</span>
+              <Input
+                type="number"
+                value={detailEnhancement}
+                onChange={(e) => setDetailEnhancement(Number(e.target.value))}
+                className="w-20 mr-4 text-sm border-0 bg-white"
+              />
+              <CustomSlider
+                value={detailEnhancement}
+                onChange={setDetailEnhancement}
+                min={0}
+                max={100}
+                step={1}
+              />
+            </div>
+            <div className="flex items-center">
+              <span className="text-sm font-medium w-32">Brightness</span>
+              <Input
+                type="number"
+                value={brightness}
+                onChange={(e) => setBrightness(Number(e.target.value))}
+                className="w-20 mr-4 text-sm border-0 bg-white"
+              />
+              <CustomSlider
+                value={brightness}
+                onChange={setBrightness}
+                min={-100}
+                max={100}
+                step={1}
+              />
+            </div>
+            <div className="flex items-center">
+              <span className="text-sm font-medium w-32">Midtones</span>
+              <Input
+                type="number"
+                value={midtones}
+                onChange={(e) => setMidtones(Number(e.target.value))}
+                className="w-20 mr-4 text-sm border-0 bg-white"
+                step="0.01"
+              />
+              <CustomSlider
+                value={midtones}
+                onChange={setMidtones}
+                min={0}
+                max={2}
+                step={0.01}
+              />
+            </div>
+            <div className="flex items-center">
+              <span className="text-sm font-medium w-32">Noise</span>
+              <Input
+                type="number"
+                value={noise}
+                onChange={(e) => setNoise(Number(e.target.value))}
+                className="w-20 mr-4 text-sm border-0 bg-white"
+              />
+              <CustomSlider
+                value={noise}
+                onChange={setNoise}
+                min={0}
+                max={100}
+                step={1}
+              />
+            </div>
+            <div className="flex items-center">
+              <span className="text-sm font-medium w-32">Glow</span>
+              <Input
+                type="number"
+                value={glow}
+                onChange={(e) => setGlow(Number(e.target.value))}
+                className="w-20 mr-4 text-sm border-0 bg-white"
+              />
+              <CustomSlider
+                value={glow}
+                onChange={setGlow}
+                min={0}
+                max={100}
+                step={1}
+              />
+            </div>
           </div>
-          <div className="flex flex-1 overflow-hidden">
-            <div 
-              className="flex-1 flex items-center justify-center border-r border-gray-200 cursor-pointer overflow-auto bg-white"
-              onClick={handleColumnClick}
-            >
-              {processedImage ? (
-                <img src={processedImage} alt="Processed" className="max-w-full max-h-full object-contain" />
-              ) : (
-                <img src={selectedImage} alt="Default or Selected" className="max-w-full max-h-full object-contain" />
-              )}
-              <input
-                type="file"
-                ref={fileInputRef}
-                onChange={handleImageUpload}
-                accept="image/*"
-                className="hidden"
-                aria-label="Upload image"
-              />
-              <canvas ref={canvasRef} className="hidden" />
-            </div>
-            <div className="w-80 flex flex-col p-4 overflow-y-auto">
-              <Select
-                options={ditherAlgorithms}
-                value={selectedAlgorithm}
-                onChange={(value) => setSelectedAlgorithm(Number(value))}
-                className="mb-4"
-              />
-              <div className="space-y-4 mb-4">
-                <div className="flex items-center">
-                  <span className="text-sm font-medium w-32">Pixelation Scale</span>
-                  <Input
-                    type="number"
-                    value={pixelationScale}
-                    onChange={(e) => setPixelationScale(Number(e.target.value))}
-                    className="w-20 mr-4 text-sm border-0 bg-white"
-                  />
-                  <CustomSlider
-                    value={pixelationScale}
-                    onChange={setPixelationScale}
-                    min={1}
-                    max={10}
-                    step={1}
-                  />
-                </div>
-                <div className="flex items-center">
-                  <span className="text-sm font-medium w-32">Detail Enhancement</span>
-                  <Input
-                    type="number"
-                    value={detailEnhancement}
-                    onChange={(e) => setDetailEnhancement(Number(e.target.value))}
-                    className="w-20 mr-4 text-sm border-0 bg-white"
-                  />
-                  <CustomSlider
-                    value={detailEnhancement}
-                    onChange={setDetailEnhancement}
-                    min={0}
-                    max={100}
-                    step={1}
-                  />
-                </div>
-                <div className="flex items-center">
-                  <span className="text-sm font-medium w-32">Brightness</span>
-                  <Input
-                    type="number"
-                    value={brightness}
-                    onChange={(e) => setBrightness(Number(e.target.value))}
-                    className="w-20 mr-4 text-sm border-0 bg-white"
-                  />
-                  <CustomSlider
-                    value={brightness}
-                    onChange={setBrightness}
-                    min={-100}
-                    max={100}
-                    step={1}
-                  />
-                </div>
-                <div className="flex items-center">
-                  <span className="text-sm font-medium w-32">Midtones</span>
-                  <Input
-                    type="number"
-                    value={midtones}
-                    onChange={(e) => setMidtones(Number(e.target.value))}
-                    className="w-20 mr-4 text-sm border-0 bg-white"
-                    step="0.01"
-                  />
-                  <CustomSlider
-                    value={midtones}
-                    onChange={setMidtones}
-                    min={0}
-                    max={2}
-                    step={0.01}
-                  />
-                </div>
-                <div className="flex items-center">
-                  <span className="text-sm font-medium w-32">Noise</span>
-                  <Input
-                    type="number"
-                    value={noise}
-                    onChange={(e) => setNoise(Number(e.target.value))}
-                    className="w-20 mr-4 text-sm border-0 bg-white"
-                  />
-                  <CustomSlider
-                    value={noise}
-                    onChange={setNoise}
-                    min={0}
-                    max={100}
-                    step={1}
-                  />
-                </div>
-                <div className="flex items-center">
-                  <span className="text-sm font-medium w-32">Glow</span>
-                  <Input
-                    type="number"
-                    value={glow}
-                    onChange={(e) => setGlow(Number(e.target.value))}
-                    className="w-20 mr-4 text-sm border-0 bg-white"
-                  />
-                  <CustomSlider
-                    value={glow}
-                    onChange={setGlow}
-                    min={0}
-                    max={100}
-                    step={1}
-                  />
-                </div>
-              </div>
-              <div className="flex-grow" />
-              <div className="flex gap-2 pb-8">
-                <Button className="flex-1 bg-blue-500 hover:bg-blue-600 text-white" onClick={handleDownload}>
-                  <Download className="w-4 h-4 mr-2" />
-                  Download
-                </Button>
-              </div>
-            </div>
+          <div className="flex-grow" />
+          <div className="flex gap-2 pb-8">
+            <Button className="flex-1 bg-primary hover:bg-primary-dark text-white" onClick={handleDownload}>
+              <Download className="w-4 h-4 mr-2" />
+              Download
+            </Button>
           </div>
         </div>
       </div>
-    </main>
+    </div>
   )
 }

@@ -5,8 +5,8 @@ import { Inter } from 'next/font/google'
 const inter = Inter({ subsets: ['latin'] })
 
 export const metadata: Metadata = {
-  title: 'Displace - Pattern Glass, Noise and Glitch Effects',
-  description: 'Create stunning visual effects with Displace',
+  title: 'Dither - Apply Amazing Dithering Effects',
+  description: 'Create stunning visual effects with Dither',
 }
 
 export default function RootLayout({
