@@ -19,13 +19,11 @@ export const metadata: Metadata = {
 
 export default function Home() {
   return (
-    <main className="flex min-h-screen flex-col items-center justify-between p-24 bg-white dark:bg-black">
-      
-
-      <div className="relative flex place-items-center">
+    <main className="flex min-h-screen flex-col items-center justify-center p-4 sm:p-8 md:p-16 lg:p-24 bg-white dark:bg-black">
+      <h1 className="sr-only">Dither - Apply Amazing Dithering Effects</h1>
+      <div className="w-full max-w-6xl">
         <DisplacePlugin />
       </div>
-
     </main>
   )
 }
