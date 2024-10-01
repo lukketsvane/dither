@@ -1,5 +1,3 @@
-/* eslint-disable */
-// @ts-nocheck
 'use client'
 
 import React, { useState, useRef, useEffect } from 'react'
@@ -7,7 +5,7 @@ import { Slider } from "@/components/ui/slider"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
-import { X, Download, Shuffle } from "lucide-react"
+import { X, Download, Shuffle, ZoomIn, ZoomOut, Move } from "lucide-react"
 
 const defaultImage = "/kryssord.png"
 
@@ -58,8 +56,11 @@ export default function DisplacePlugin() {
   const [glow, setGlow] = useState(0)
   const [selectedImage, setSelectedImage] = useState<string>(defaultImage)
   const [processedImage, setProcessedImage] = useState<string | null>(null)
+  const [zoomLevel, setZoomLevel] = useState(1)
+  const [panPosition, setPanPosition] = useState({ x: 0, y: 0 })
   const fileInputRef = useRef<HTMLInputElement>(null)
   const canvasRef = useRef<HTMLCanvasElement>(null)
+  const zoomCanvasRef = useRef<HTMLCanvasElement>(null)
 
   const handleImageUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0]
@@ -88,7 +89,7 @@ export default function DisplacePlugin() {
     const ctx = canvas.getContext('2d')
     if (!ctx) return
 
-    const img = new window.Image()
+    const img = new Image()
     img.crossOrigin = "anonymous"
     img.onload = () => {
       canvas.width = img.width
@@ -347,6 +348,52 @@ export default function DisplacePlugin() {
     setGlow(Math.floor(Math.random() * 101))
   }
 
+  const handleZoomIn = () => {
+    setZoomLevel(prev => Math.min(prev + 0.1, 5))
+  }
+
+  const handleZoomOut = () => {
+    setZoomLevel(prev => Math.max(prev - 0.1, 1))
+  }
+
+  const handlePan = (e: React.MouseEvent<HTMLDivElement>) => {
+    if (canvasRef.current) {
+      const rect = canvasRef.current.getBoundingClientRect()
+      const x = (e.clientX - rect.left) / zoomLevel
+      const y = (e.clientY - rect.top) / zoomLevel
+      setPanPosition({ x, y })
+    }
+  }
+
+  useEffect(() => {
+    if (processedImage && zoomCanvasRef.current) {
+      const zoomCanvas = zoomCanvasRef.current
+      const zoomCtx = zoomCanvas.getContext('2d')
+      if (zoomCtx) {
+        const img = new Image()
+        img.onload = () => {
+          const zoomSize = 200
+          zoomCanvas.width = zoomSize
+          zoomCanvas.height = zoomSize
+          const sourceX = Math.max(0, Math.min(img.width - zoomSize / zoomLevel, panPosition.x - zoomSize / (2 * zoomLevel)))
+          const sourceY = Math.max(0, Math.min(img.height - zoomSize / zoomLevel, panPosition.y - zoomSize / (2 * zoomLevel)))
+          zoomCtx.drawImage(
+            img,
+            sourceX,
+            sourceY,
+            zoomSize / zoomLevel,
+            zoomSize / zoomLevel,
+            0,
+            0,
+            zoomSize,
+            zoomSize
+          )
+        }
+        img.src = processedImage
+      }
+    }
+  }, [processedImage, zoomLevel, panPosition])
+
   return (
     <div className="flex flex-col h-full bg-white overflow-hidden">
       <div className="flex items-center justify-between p-4 border-b border-gray-200">
@@ -360,13 +407,24 @@ export default function DisplacePlugin() {
       </div>
       <div className="flex flex-1 overflow-hidden">
         <div 
-          className="flex-1 flex items-center justify-center border-r border-gray-200 cursor-pointer overflow-auto bg-white"
+          className="flex-1 relative overflow-hidden cursor-move"
           onClick={handleColumnClick}
+          onMouseMove={handlePan}
         >
           {processedImage ? (
-            <img src={processedImage} alt="Processed" className="max-w-full max-h-full object-contain" />
+            <img 
+              src={processedImage} 
+              alt="Processed" 
+              className="w-full h-full object-contain"
+              style={{ transform: `scale(${zoomLevel})`, transformOrigin: 'top left' }}
+            />
           ) : (
-            <img src={selectedImage} alt="Default or Selected" className="max-w-full max-h-full object-contain" />
+            <img 
+              src={selectedImage} 
+              alt="Default or Selected" 
+              className="w-full h-full object-contain"
+              style={{ transform: `scale(${zoomLevel})`, transformOrigin: 'top left' }}
+            />
           )}
           <input
             type="file"
@@ -377,6 +435,17 @@ export default function DisplacePlugin() {
             aria-label="Upload image"
           />
           <canvas ref={canvasRef} className="hidden" />
+          <div className="absolute bottom-4 left-4 w-48 h-48 border-2 border-primary bg-white">
+            <canvas ref={zoomCanvasRef} className="w-full h-full" />
+          </div>
+          <div className="absolute top-4 right-4 flex space-x-2">
+            <Button onClick={handleZoomIn} size="icon" variant="secondary">
+              <ZoomIn className="h-4 w-4" />
+            </Button>
+            <Button onClick={handleZoomOut} size="icon" variant="secondary">
+              <ZoomOut className="h-4 w-4" />
+            </Button>
+          </div>
         </div>
         <div className="w-80 flex flex-col p-4 overflow-y-auto">
           <Select onValueChange={(value) => setSelectedAlgorithm(Number(value))}>
