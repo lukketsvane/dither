@@ -18,7 +18,7 @@ const CustomSlider = ({ value, onChange, min, max, step }: { value: number; onCh
   </div>
 )
 
-export default function DisplacePlugin() {
+export default function DitherPlugin() {
   const { theme, setTheme } = useTheme()
   const [selectedAlgorithm, setSelectedAlgorithm] = useState(0)
   const [pixelationScale, setPixelationScale] = useState(1)
@@ -164,7 +164,7 @@ export default function DisplacePlugin() {
       if (zoomCtx) {
         const img = new Image()
         img.onload = () => {
-          const zoomSize = 120  // Further reduced from 150 to make the zoom area smaller
+          const zoomSize = 120
           zoomCanvas.width = zoomSize
           zoomCanvas.height = zoomSize
           const sourceX = Math.max(0, Math.min(img.width - zoomSize / zoomLevel, panPosition.x - zoomSize / (2 * zoomLevel)))
@@ -189,7 +189,7 @@ export default function DisplacePlugin() {
           <Button variant="ghost" size="icon" onClick={toggleTheme} className="h-8 w-8">
             {theme === 'dark' ? <Sun className="h-4 w-4" /> : <Moon className="h-4 w-4" />}
           </Button>
-          <button className="text-muted-foregroun hover:text-foreground" onClick={removeImage}>
+          <button className="text-muted-foreground hover:text-foreground" onClick={removeImage}>
             <X className="h-5 w-5" />
           </button>
         </div>
@@ -235,16 +235,16 @@ export default function DisplacePlugin() {
               { label: "Brightness", value: brightness, setValue: setBrightness, min: -100, max: 100, step: 1 },
               { label: "Contrast", value: contrast, setValue: setContrast, min: 0, max: 2, step: 0.1 },
               { label: "Threshold", value: threshold, setValue: setThreshold, min: 0, max: 255, step: 1 },
-              { label: "Noise", value: noise, setValue: setNoise, min: 0, max: 100, step: 1 },
+              {label: "Noise", value: noise, setValue: setNoise, min: 0, max: 100, step: 1 },
               { label: "Glow", value: glow, setValue: setGlow, min: 0, max: 100, step: 1 }
             ].map(({ label, value, setValue, min, max, step }) => (
               <div key={label} className="flex items-center">
-                <span className="text-xs font-medium w-16">{label}</span>
+                <span className="text-xs font-medium w-14">{label}</span>
                 <Input
                   type="number"
                   value={value}
                   onChange={(e) => setValue(Number(e.target.value))}
-                  className="w-12 mr-2 text-xs h-6 px-1"
+                  className="w-16 mr-2 text-xs h-6 px-1"
                   step={step.toString()}
                 />
                 <CustomSlider value={value} onChange={setValue} min={min} max={max} step={step} />
