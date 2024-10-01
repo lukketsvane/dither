@@ -90,6 +90,7 @@ export default function DitherPlugin() {
 
   const getDitherFunction = (algorithm: number) => {
     const functions = [
+      // Floyd-Steinberg
       (imageData: ImageData, width: number, height: number, options: any) => {
         const data = imageData.data
         for (let y = 0; y < height; y++) {
@@ -117,21 +118,20 @@ export default function DitherPlugin() {
           }
         }
       },
-      // Placeholder functions for other algorithms
+      // Jarvis-Judice-Ninke (placeholder)
       (imageData: ImageData, width: number, height: number, options: any) => {
-        // Jarvis-Judice-Ninke algorithm (placeholder)
         console.log("Jarvis-Judice-Ninke dithering applied")
       },
+      // Bayer (placeholder)
       (imageData: ImageData, width: number, height: number, options: any) => {
-        // Bayer algorithm (placeholder)
         console.log("Bayer dithering applied")
       },
+      // Atkinson (placeholder)
       (imageData: ImageData, width: number, height: number, options: any) => {
-        // Atkinson algorithm (placeholder)
         console.log("Atkinson dithering applied")
       },
+      // Noise (placeholder)
       (imageData: ImageData, width: number, height: number, options: any) => {
-        // Noise dithering (placeholder)
         console.log("Noise dithering applied")
       },
     ]
