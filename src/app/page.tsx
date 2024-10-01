@@ -1,25 +1,31 @@
-'use client'
+import type { Metadata } from 'next'
+import DisplacePlugin from '@/components/dither-plugin'
 
-import { useState, useEffect } from 'react'
-import dynamic from 'next/dynamic'
-
-const DisplacePlugin = dynamic(() => import('../components/dither-plugin'), { 
-  ssr: false,
-  loading: () => <p>Loading...</p>
-})
+export const metadata: Metadata = {
+  title: 'Dither - Apply Amazing Dithering Effects',
+  description: 'A powerful tool for creatives to apply stunning dithering effects to images with customizable parameters.',
+  openGraph: {
+    title: 'Dither - Apply Amazing Dithering Effects',
+    description: 'Transform your images with customizable dithering effects.',
+    images: [{ url: '/og-image.png', width: 1200, height: 630, alt: 'Dither App Preview' }],
+  },
+  twitter: {
+    card: 'summary_large_image',
+    title: 'Dither - Apply Amazing Dithering Effects',
+    description: 'Transform your images with customizable dithering effects.',
+    images: ['/og-image.png'],
+  },
+}
 
 export default function Home() {
-  const [isMounted, setIsMounted] = useState(false)
-
-  useEffect(() => {
-    setIsMounted(true)
-  }, [])
-
   return (
-    <main className="flex min-h-screen items-center justify-center bg-gray-100">
-      <div className="w-full max-w-7xl h-[calc(100vh-2rem)] m-4 bg-white rounded-lg overflow-hidden">
-        {isMounted && <DisplacePlugin />}
+    <main className="flex min-h-screen flex-col items-center justify-between p-24 bg-white dark:bg-black">
+      
+
+      <div className="relative flex place-items-center">
+        <DisplacePlugin />
       </div>
+
     </main>
   )
 }
