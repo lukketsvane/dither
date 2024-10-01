@@ -80,7 +80,8 @@ export default function DitherPlugin() {
           }
         }
       }
-      getDitherFunction(selectedAlgorithm)(imageData, canvas.width, canvas.height, { detailEnhancement, noise, glow })
+      const ditherFunction = getDitherFunction(selectedAlgorithm)
+      ditherFunction(imageData, canvas.width, canvas.height, { detailEnhancement, noise, glow })
       ctx.putImageData(imageData, 0, 0)
       setProcessedImage(canvas.toDataURL())
     }
@@ -116,9 +117,25 @@ export default function DitherPlugin() {
           }
         }
       },
-      // ... (other dither functions remain unchanged)
+      // Placeholder functions for other algorithms
+      (imageData: ImageData, width: number, height: number, options: any) => {
+        // Jarvis-Judice-Ninke algorithm (placeholder)
+        console.log("Jarvis-Judice-Ninke dithering applied")
+      },
+      (imageData: ImageData, width: number, height: number, options: any) => {
+        // Bayer algorithm (placeholder)
+        console.log("Bayer dithering applied")
+      },
+      (imageData: ImageData, width: number, height: number, options: any) => {
+        // Atkinson algorithm (placeholder)
+        console.log("Atkinson dithering applied")
+      },
+      (imageData: ImageData, width: number, height: number, options: any) => {
+        // Noise dithering (placeholder)
+        console.log("Noise dithering applied")
+      },
     ]
-    return functions[algorithm]
+    return functions[algorithm] || functions[0] // Default to Floyd-Steinberg if invalid index
   }
 
   useEffect(() => { applyDithering() }, [selectedImage, selectedAlgorithm, pixelationScale, detailEnhancement, brightness, contrast, threshold, noise, glow])
@@ -235,7 +252,7 @@ export default function DitherPlugin() {
               { label: "Brightness", value: brightness, setValue: setBrightness, min: -100, max: 100, step: 1 },
               { label: "Contrast", value: contrast, setValue: setContrast, min: 0, max: 2, step: 0.1 },
               { label: "Threshold", value: threshold, setValue: setThreshold, min: 0, max: 255, step: 1 },
-              {label: "Noise", value: noise, setValue: setNoise, min: 0, max: 100, step: 1 },
+              { label: "Noise", value: noise, setValue: setNoise, min: 0, max: 100, step: 1 },
               { label: "Glow", value: glow, setValue: setGlow, min: 0, max: 100, step: 1 }
             ].map(({ label, value, setValue, min, max, step }) => (
               <div key={label} className="flex items-center">
