@@ -164,7 +164,7 @@ export default function DisplacePlugin() {
       if (zoomCtx) {
         const img = new Image()
         img.onload = () => {
-          const zoomSize = 150  // Reduced from 200 to make the zoom area smaller
+          const zoomSize = 120  // Further reduced from 150 to make the zoom area smaller
           zoomCanvas.width = zoomSize
           zoomCanvas.height = zoomSize
           const sourceX = Math.max(0, Math.min(img.width - zoomSize / zoomLevel, panPosition.x - zoomSize / (2 * zoomLevel)))
@@ -180,17 +180,17 @@ export default function DisplacePlugin() {
 
   return (
     <div className="flex flex-col h-full bg-background text-foreground overflow-hidden">
-      <div className="flex items-center justify-between p-4 border-b border-border">
-        <h1 className="text-xl">
+      <div className="flex items-center justify-between p-2 border-b border-border">
+        <h1 className="text-lg">
           <span className="font-bold">Dither</span>
-          <span className="font-normal text-muted-foreground"> – Apply amazing dithering effects</span>
+          <span className="font-normal text-muted-foreground text-sm"> – Apply amazing dithering effects</span>
         </h1>
         <div className="flex items-center space-x-2">
-          <Button variant="ghost" size="icon" onClick={toggleTheme}>
-            {theme === 'dark' ? <Sun className="h-5 w-5" /> : <Moon className="h-5 w-5" />}
+          <Button variant="ghost" size="icon" onClick={toggleTheme} className="h-8 w-8">
+            {theme === 'dark' ? <Sun className="h-4 w-4" /> : <Moon className="h-4 w-4" />}
           </Button>
-          <button className="text-muted-foreground hover:text-foreground" onClick={removeImage}>
-            <X className="h-6 w-6" />
+          <button className="text-muted-foregroun hover:text-foreground" onClick={removeImage}>
+            <X className="h-5 w-5" />
           </button>
         </div>
       </div>
@@ -203,35 +203,35 @@ export default function DisplacePlugin() {
           )}
           <input type="file" ref={fileInputRef} onChange={handleImageUpload} accept="image/*" className="hidden" aria-label="Upload image" />
           <canvas ref={canvasRef} className="hidden" />
-          <div className="absolute bottom-4 left-4 w-36 h-36 border-2 border-primary bg-card">
+          <div className="absolute bottom-2 left-2 w-28 h-28 border border-primary bg-card">
             <canvas ref={zoomCanvasRef} className="w-full h-full" />
           </div>
-          <div className="absolute top-4 right-4 flex space-x-2">
-            <Button onClick={handleZoomIn} size="icon" variant="secondary">
-              <ZoomIn className="h-4 w-4" />
+          <div className="absolute top-2 right-2 flex space-x-1">
+            <Button onClick={handleZoomIn} size="icon" variant="secondary" className="h-6 w-6">
+              <ZoomIn className="h-3 w-3" />
             </Button>
-            <Button onClick={handleZoomOut} size="icon" variant="secondary">
-              <ZoomOut className="h-4 w-4" />
+            <Button onClick={handleZoomOut} size="icon" variant="secondary" className="h-6 w-6">
+              <ZoomOut className="h-3 w-3" />
             </Button>
           </div>
         </div>
-        <div className="w-80 flex flex-col p-4 overflow-y-auto bg-card">
+        <div className="w-64 flex flex-col p-2 overflow-y-auto bg-card">
           <Select onValueChange={(value) => setSelectedAlgorithm(Number(value))}>
-            <SelectTrigger className="mb-4">
+            <SelectTrigger className="mb-2 text-xs">
               <SelectValue placeholder={ditherAlgorithms[selectedAlgorithm]} />
             </SelectTrigger>
             <SelectContent>
               {ditherAlgorithms.map((algorithm, index) => (
-                <SelectItem key={algorithm} value={index.toString()}>
+                <SelectItem key={algorithm} value={index.toString()} className="text-xs">
                   {algorithm}
                 </SelectItem>
               ))}
             </SelectContent>
           </Select>
-          <div className="space-y-4 mb-4">
+          <div className="space-y-2 mb-2">
             {[
-              { label: "Pixelation Scale", value: pixelationScale, setValue: setPixelationScale, min: 1, max: 10, step: 1 },
-              { label: "Detail Enhancement", value: detailEnhancement, setValue: setDetailEnhancement, min: 0, max: 100, step: 1 },
+              { label: "Pixelation", value: pixelationScale, setValue: setPixelationScale, min: 1, max: 10, step: 1 },
+              { label: "Detail", value: detailEnhancement, setValue: setDetailEnhancement, min: 0, max: 100, step: 1 },
               { label: "Brightness", value: brightness, setValue: setBrightness, min: -100, max: 100, step: 1 },
               { label: "Contrast", value: contrast, setValue: setContrast, min: 0, max: 2, step: 0.1 },
               { label: "Threshold", value: threshold, setValue: setThreshold, min: 0, max: 255, step: 1 },
@@ -239,12 +239,12 @@ export default function DisplacePlugin() {
               { label: "Glow", value: glow, setValue: setGlow, min: 0, max: 100, step: 1 }
             ].map(({ label, value, setValue, min, max, step }) => (
               <div key={label} className="flex items-center">
-                <span className="text-sm font-medium w-32">{label}</span>
+                <span className="text-xs font-medium w-16">{label}</span>
                 <Input
                   type="number"
                   value={value}
                   onChange={(e) => setValue(Number(e.target.value))}
-                  className="w-20 mr-4 text-sm border-0 bg-background"
+                  className="w-12 mr-2 text-xs h-6 px-1"
                   step={step.toString()}
                 />
                 <CustomSlider value={value} onChange={setValue} min={min} max={max} step={step} />
@@ -252,13 +252,13 @@ export default function DisplacePlugin() {
             ))}
           </div>
           <div className="flex-grow" />
-          <div className="flex gap-2 pb-8">
-            <Button className="flex-1 bg-secondary text-secondary-foreground hover:bg-secondary/90" onClick={randomizeParameters}>
-              <Shuffle className="w-4 h-4 mr-2" />
+          <div className="flex gap-2 pb-2">
+            <Button className="flex-1 bg-secondary text-secondary-foreground hover:bg-secondary/90 text-xs h-8" onClick={randomizeParameters}>
+              <Shuffle className="w-3 h-3 mr-1" />
               Random
             </Button>
-            <Button className="flex-1 bg-primary text-primary-foreground hover:bg-primary/90" onClick={handleDownload}>
-              <Download className="w-4 h-4 mr-2" />
+            <Button className="flex-1 bg-primary text-primary-foreground hover:bg-primary/90 text-xs h-8" onClick={handleDownload}>
+              <Download className="w-3 h-3 mr-1" />
               .png
             </Button>
           </div>
