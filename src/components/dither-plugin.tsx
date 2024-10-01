@@ -90,7 +90,6 @@ export default function DitherPlugin() {
 
   const getDitherFunction = (algorithm: number) => {
     const functions = [
-      // Floyd-Steinberg
       (imageData: ImageData, width: number, height: number, options: any) => {
         const data = imageData.data
         for (let y = 0; y < height; y++) {
@@ -118,20 +117,20 @@ export default function DitherPlugin() {
           }
         }
       },
-      // Jarvis-Judice-Ninke (placeholder)
       (imageData: ImageData, width: number, height: number, options: any) => {
+        // Jarvis-Judice-Ninke algorithm (placeholder)
         console.log("Jarvis-Judice-Ninke dithering applied")
       },
-      // Bayer (placeholder)
       (imageData: ImageData, width: number, height: number, options: any) => {
+        // Bayer algorithm (placeholder)
         console.log("Bayer dithering applied")
       },
-      // Atkinson (placeholder)
       (imageData: ImageData, width: number, height: number, options: any) => {
+        // Atkinson algorithm (placeholder)
         console.log("Atkinson dithering applied")
       },
-      // Noise (placeholder)
       (imageData: ImageData, width: number, height: number, options: any) => {
+        // Noise dithering (placeholder)
         console.log("Noise dithering applied")
       },
     ]
@@ -238,11 +237,9 @@ export default function DitherPlugin() {
               <SelectValue placeholder={ditherAlgorithms[selectedAlgorithm]} />
             </SelectTrigger>
             <SelectContent>
-              {ditherAlgorithms.map((algorithm, index) => (
-                <SelectItem key={algorithm} value={index.toString()} className="text-xs">
-                  {algorithm}
-                </SelectItem>
-              ))}
+              {ditherAlgorithms.map((algorithm, index) =>
+                <SelectItem key={algorithm} value={index.toString()} className="text-xs">{algorithm}</SelectItem>
+              )}
             </SelectContent>
           </Select>
           <div className="space-y-2 mb-2">
@@ -269,12 +266,18 @@ export default function DitherPlugin() {
             ))}
           </div>
           <div className="flex-grow" />
-          <div className="flex gap-2 pb-2">
-            <Button className="flex-1 bg-secondary text-secondary-foreground hover:bg-secondary/90 text-xs h-8" onClick={randomizeParameters}>
+          <div className="flex gap-2 pb-2 w-full">
+            <Button
+              className="flex-1 bg-secondary text-secondary-foreground hover:bg-secondary/90 text-xs h-8"
+              onClick={randomizeParameters}
+            >
               <Shuffle className="w-3 h-3 mr-1" />
               Random
             </Button>
-            <Button className="flex-1 bg-primary text-primary-foreground hover:bg-primary/90 text-xs h-8" onClick={handleDownload}>
+            <Button
+              className="flex-1 bg-primary text-primary-foreground hover:bg-primary/90 text-xs h-8"
+              onClick={handleDownload}
+            >
               <Download className="w-3 h-3 mr-1" />
               .png
             </Button>
