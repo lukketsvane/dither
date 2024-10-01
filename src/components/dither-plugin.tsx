@@ -5,7 +5,7 @@ import { Slider } from "@/components/ui/slider"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Select } from "@/components/ui/select"
-import { X, Download } from "lucide-react"
+import { X, Download, Shuffle } from "lucide-react"
 
 const defaultImage = "/kryssord.png"
 
@@ -322,7 +322,8 @@ export default function DisplacePlugin() {
 
   useEffect(() => {
     applyDithering()
-  }, [selectedImage, selectedAlgorithm, pixelationScale, detailEnhancement, brightness, midtones, noise, glow])
+  }, [selectedImage, selectedAlgorithm, pixelationScale, detailEnhancement, brightness,
+midtones, noise, glow])
 
   const handleDownload = () => {
     if (processedImage) {
@@ -333,6 +334,16 @@ export default function DisplacePlugin() {
       link.click()
       document.body.removeChild(link)
     }
+  }
+
+  const randomizeParameters = () => {
+    setSelectedAlgorithm(Math.floor(Math.random() * ditherAlgorithms.length))
+    setPixelationScale(Math.floor(Math.random() * 10) + 1)
+    setDetailEnhancement(Math.floor(Math.random() * 101))
+    setBrightness(Math.floor(Math.random() * 201) - 100)
+    setMidtones(Math.random() * 2)
+    setNoise(Math.floor(Math.random() * 101))
+    setGlow(Math.floor(Math.random() * 101))
   }
 
   return (
@@ -477,6 +488,10 @@ export default function DisplacePlugin() {
             <Button className="flex-1 bg-primary hover:bg-primary-dark text-white" onClick={handleDownload}>
               <Download className="w-4 h-4 mr-2" />
               Download
+            </Button>
+            <Button className="flex-1 bg-secondary hover:bg-secondary-dark text-white" onClick={randomizeParameters}>
+              <Shuffle className="w-4 h-4 mr-2" />
+              Random
             </Button>
           </div>
         </div>
