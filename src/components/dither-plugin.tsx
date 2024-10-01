@@ -51,7 +51,8 @@ export default function DisplacePlugin() {
   const [pixelationScale, setPixelationScale] = useState(1)
   const [detailEnhancement, setDetailEnhancement] = useState(50)
   const [brightness, setBrightness] = useState(0)
-  const [midtones, setMidtones] = useState(1)
+  const [contrast, setContrast] = useState(1)
+  const [threshold, setThreshold] = useState(128)
   const [noise, setNoise] = useState(0)
   const [glow, setGlow] = useState(0)
   const [selectedImage, setSelectedImage] = useState<string>(defaultImage)
@@ -99,16 +100,14 @@ export default function DisplacePlugin() {
       const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height)
       const data = imageData.data
 
-      // Apply brightness and midtones adjustments
+      // Convert to black and white
       for (let i = 0; i < data.length; i += 4) {
-        for (let j = 0; j < 3; j++) {
-          let value = data[i + j]
-          // Apply brightness
-          value += brightness
-          // Apply midtones
-          value = 255 * Math.pow(value / 255, 1 / midtones)
-          data[i + j] = Math.max(0, Math.min(255, value))
-        }
+        const avg = (data[i] + data[i + 1] + data[i + 2]) / 3
+        const adjustedAvg = Math.min(255, Math.max(0, (avg - 128) * contrast + 128 + brightness))
+        const bw = adjustedAvg > threshold ? 255 : 0
+        data[i] = bw
+        data[i + 1] = bw
+        data[i + 2] = bw
       }
 
       // Apply pixelation
@@ -325,7 +324,7 @@ export default function DisplacePlugin() {
 
   useEffect(() => {
     applyDithering()
-  }, [selectedImage, selectedAlgorithm, pixelationScale, detailEnhancement, brightness, midtones, noise, glow])
+  }, [selectedImage, selectedAlgorithm, pixelationScale, detailEnhancement, brightness, contrast, threshold, noise, glow])
 
   const handleDownload = () => {
     if (processedImage) {
@@ -343,7 +342,8 @@ export default function DisplacePlugin() {
     setPixelationScale(Math.floor(Math.random() * 10) + 1)
     setDetailEnhancement(Math.floor(Math.random() * 101))
     setBrightness(Math.floor(Math.random() * 201) - 100)
-    setMidtones(Math.random() * 2)
+    setContrast(Math.random() * 2)
+    setThreshold(Math.floor(Math.random() * 256))
     setNoise(Math.floor(Math.random() * 101))
     setGlow(Math.floor(Math.random() * 101))
   }
@@ -510,20 +510,36 @@ export default function DisplacePlugin() {
               />
             </div>
             <div className="flex items-center">
-              <span className="text-sm font-medium w-32">Midtones</span>
+              <span className="text-sm font-medium w-32">Contrast</span>
               <Input
                 type="number"
-                value={midtones}
-                onChange={(e) => setMidtones(Number(e.target.value))}
+                value={contrast}
+                onChange={(e) => setContrast(Number(e.target.value))}
                 className="w-20 mr-4 text-sm border-0 bg-white"
-                step="0.01"
+                step="0.1"
               />
               <CustomSlider
-                value={midtones}
-                onChange={setMidtones}
+                value={contrast}
+                onChange={setContrast}
                 min={0}
                 max={2}
-                step={0.01}
+                step={0.1}
+              />
+            </div>
+            <div className="flex items-center">
+              <span className="text-sm font-medium w-32">Threshold</span>
+              <Input
+                type="number"
+                value={threshold}
+                onChange={(e) => setThreshold(Number(e.target.value))}
+                className="w-20 mr-4 text-sm border-0 bg-white"
+              />
+              <CustomSlider
+                value={threshold}
+                onChange={setThreshold}
+                min={0}
+                max={255}
+                step={1}
               />
             </div>
             <div className="flex items-center">
@@ -561,13 +577,13 @@ export default function DisplacePlugin() {
           </div>
           <div className="flex-grow" />
           <div className="flex gap-2 pb-8">
-            <Button className="flex-1 bg-primary hover:bg-primary-dark text-white" onClick={handleDownload}>
-              <Download className="w-4 h-4 mr-2" />
-              Download
-            </Button>
-            <Button className="flex-1 bg-secondary hover:bg-secondary-dark text-white" onClick={randomizeParameters}>
+            <Button className="flex-1 bg-secondary text-primary hover:bg-secondary-dark text-black" onClick={randomizeParameters}>
               <Shuffle className="w-4 h-4 mr-2" />
               Random
+            </Button>
+            <Button className="flex-1 bg-primary hover:bg-primary-dark text-white" onClick={handleDownload}>
+              <Download className="w-4 h-4 mr-2" />
+              .png
             </Button>
           </div>
         </div>
