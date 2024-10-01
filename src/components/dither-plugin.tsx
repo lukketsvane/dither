@@ -357,7 +357,8 @@ midtones, noise, glow])
           <X className="h-6 w-6" />
         </button>
       </div>
-      <div className="flex flex-1 overflow-hidden">
+      <div className="flex flex-col h-full bg-white overflow-hidden">
+        
         <div 
           className="flex-1 flex items-center justify-center border-r border-gray-200 cursor-pointer overflow-auto bg-white"
           onClick={handleColumnClick}
@@ -378,12 +379,12 @@ midtones, noise, glow])
           <canvas ref={canvasRef} className="hidden" />
         </div>
         <div className="w-80 flex flex-col p-4 overflow-y-auto">
-          <Select
-            options={ditherAlgorithms}
-            value={selectedAlgorithm}
-            onChange={(value) => setSelectedAlgorithm(Number(value))}
-            className="mb-4"
-          />
+        <Select
+          options={ditherAlgorithms}
+          value={selectedAlgorithm.toString()} // Convert to string
+          onChange={(value) => setSelectedAlgorithm(Number(value))}
+          className="mb-4"
+        />
           <div className="space-y-4 mb-4">
             <div className="flex items-center">
               <span className="text-sm font-medium w-32">Pixelation Scale</span>
