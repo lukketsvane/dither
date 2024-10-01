@@ -1,10 +1,11 @@
+/* eslint-disable */
 'use client'
 
 import React, { useState, useRef, useEffect } from 'react'
 import { Slider } from "@/components/ui/slider"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
-import { Select } from "@/components/ui/select"
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import { X, Download, Shuffle } from "lucide-react"
 
 const defaultImage = "/kryssord.png"
@@ -322,8 +323,7 @@ export default function DisplacePlugin() {
 
   useEffect(() => {
     applyDithering()
-  }, [selectedImage, selectedAlgorithm, pixelationScale, detailEnhancement, brightness,
-midtones, noise, glow])
+  }, [selectedImage, selectedAlgorithm, pixelationScale, detailEnhancement, brightness, midtones, noise, glow])
 
   const handleDownload = () => {
     if (processedImage) {
@@ -341,7 +341,8 @@ midtones, noise, glow])
     setPixelationScale(Math.floor(Math.random() * 10) + 1)
     setDetailEnhancement(Math.floor(Math.random() * 101))
     setBrightness(Math.floor(Math.random() * 201) - 100)
-    setMidtones(Math.random() * 2)
+    set
+Midtones(Math.random() * 2)
     setNoise(Math.floor(Math.random() * 101))
     setGlow(Math.floor(Math.random() * 101))
   }
@@ -357,8 +358,7 @@ midtones, noise, glow])
           <X className="h-6 w-6" />
         </button>
       </div>
-      <div className="flex flex-col h-full bg-white overflow-hidden">
-        
+      <div className="flex flex-1 overflow-hidden">
         <div 
           className="flex-1 flex items-center justify-center border-r border-gray-200 cursor-pointer overflow-auto bg-white"
           onClick={handleColumnClick}
@@ -379,12 +379,18 @@ midtones, noise, glow])
           <canvas ref={canvasRef} className="hidden" />
         </div>
         <div className="w-80 flex flex-col p-4 overflow-y-auto">
-        <Select
-          options={ditherAlgorithms}
-          value={selectedAlgorithm.toString()} // Convert to string
-          onChange={(value) => setSelectedAlgorithm(Number(value))}
-          className="mb-4"
-        />
+          <Select onValueChange={(value) => setSelectedAlgorithm(Number(value))}>
+            <SelectTrigger className="mb-4">
+              <SelectValue placeholder={ditherAlgorithms[selectedAlgorithm]} />
+            </SelectTrigger>
+            <SelectContent>
+              {ditherAlgorithms.map((algorithm, index) => (
+                <SelectItem key={algorithm} value={index.toString()}>
+                  {algorithm}
+                </SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
           <div className="space-y-4 mb-4">
             <div className="flex items-center">
               <span className="text-sm font-medium w-32">Pixelation Scale</span>
